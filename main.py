@@ -19,8 +19,8 @@ from models.realnvp import RealNVP
 from models.vae import betaVAE
 
 parser = argparse.ArgumentParser(description="Deep Probabilistic Inverse Microstructure UQ")
-parser.add_argument("--train", action='store_false', help="train (True) cuda")
-parser.add_argument("--load", action='store_true', help="load pretrained model")
+parser.add_argument("--train", action='store_true', help="train (True) cuda")
+parser.add_argument("--load", action='store_false', help="load pretrained model")
 parser.add_argument("--train_gmm", action='store_true', help="train GMM prior (True)")
 parser.add_argument("--use_gmm", action='store_true', help="use GMM prior (True) or N(0,1) (False)")
 parser.add_argument("--micro", default=0, type=int, help="[0, 1, 2, 3]")
@@ -51,9 +51,6 @@ with h5py.File("inputs.h5", "r") as f:
     pcstot = f['pcs'][()]
     output = f['k'][()]
     ztot = f['z'][()]
-    print(pcstot.shape)
-    print(output.shape)
-    print(ztot.shape)
     f.close()
 
 pcstot = torch.from_numpy(pcstot).float().to(device)
@@ -62,12 +59,9 @@ ztot = torch.from_numpy(ztot).float().to(device)
 
 pcstot_min = pcstot.min(0)[0].to(device)
 pcstot_max = pcstot.max(0)[0].to(device)
-print('PC GP min: ' + str(pcstot_min.detach().cpu().numpy()))
-print('PC GP max: ' + str(pcstot_max.detach().cpu().numpy()))
 
 Yexpmean = output[microindx,:]
-print('Target Orthotropic Thermal Conductivity (W/mK)')
-print(Yexpmean.detach().cpu().numpy())
+print(f"Target Properties - k11: {Yexpmean[0].item():.5f}, k22: {Yexpmean[1].item():.5f}, k33: {Yexpmean[2].item():.5f}")
 
 ###############################################################################
 # Create prior by GMM or N(0,1)
@@ -199,7 +193,12 @@ if args.train:
 # post-processing results
 ###############################################################################
 generator.eval()
-pcstot = np.load('pcs_autocorr.npy')[:,:args.vae_input]
+model.eval()
+likelihood.eval()
+
+output = output.detach().cpu().numpy()
+pcstot = pcstot.detach().cpu().numpy()
+ztot = ztot.detach().cpu().numpy()
 
 clr_dict = {
     16 : 'red',
@@ -227,44 +226,6 @@ axes[0].set_ylabel(r'$k_{22}$ (W/mK)')
 axes[1].set_xlabel(r'$k_{11}$ (W/mK)')
 axes[1].set_ylabel(r'$k_{33}$ (W/mK)')
 plt.savefig('./images/inference/k_ensemble_paper.png', bbox_inches='tight')
-
-plt.rc('xtick',labelsize=20)
-plt.rc('ytick',labelsize=20)
-font = {'family' : 'serif','weight' : 'normal','size'   : 20}
-plt.rc('font', **font)
-plt.rc('font', family='serif')
-fig, axes = plt.subplots(1,3, figsize=(30, 8), sharex=False)
-axes[0].scatter(output[:,0],output[:,1],s=30)
-axes[1].scatter(output[:,0],output[:,2],s=30)
-axes[2].scatter(output[:,1],output[:,2],s=30)
-
-for i in range(len(microindx_array)):
-    axes[0].scatter(output[microindx_array[i],0],output[microindx_array[i],1],s=200,
-           facecolor=clr_dict[microindx_array[i]],edgecolor='black',label=microindx_array[i]+1)
-    axes[1].scatter(output[microindx_array[i],1],output[microindx_array[i]],2,s=200,
-           facecolor=clr_dict[microindx_array[i]],edgecolor='black',label=microindx_array[i]+1)
-    axes[2].scatter(output[microindx_array[i],1],output[microindx_array[i],2],s=200,
-           facecolor=clr_dict[microindx_array[i]],edgecolor='black',label=microindx_array[i]+1)
-axes[0].legend()
-axes[0].set_xlabel(r'$k_{11}$ (W/mK)')
-axes[0].set_ylabel(r'$k_{22}$ (W/mK)')
-axes[1].set_xlabel(r'$k_{11}$ (W/mK)')
-axes[1].set_ylabel(r'$k_{33}$ (W/mK)')
-axes[2].set_xlabel(r'$k_{22}$ (W/mK)')
-axes[2].set_ylabel(r'$k_{33}$ (W/mK)')
-plt.savefig('./images/inference/k_ensemble_all.png', bbox_inches='tight')
-
-fig, axes = plt.subplots(1,3, figsize=(30, 8), sharex=False)
-for i in range(3):
-    ax = axes[i]
-    ax.scatter(pcstot[:,i],pcstot[:,i+1],s=10,color='black')
-    ax.set_xlabel(r'$\alpha_{'+str(int(i))+'}$')
-    ax.set_ylabel(r'$\alpha_{'+str(int(i+1))+'}$')
-    for j in range(len(microindx_array)):
-        ax.scatter(pcstot[microindx_array[j],i],pcstot[microindx_array[j],i+1],s=200,
-                   facecolor=clr_dict[microindx_array[j]],edgecolor='black',label=microindx_array[j]+1)
-axes[0].legend()
-plt.savefig('./images/inference/pc_ensemble.png', bbox_inches='tight')
 
 plt.rc('xtick',labelsize=14)
 plt.rc('ytick',labelsize=14)
@@ -295,11 +256,10 @@ plt.savefig('./images/inference/pc_ensemble_3d.png', bbox_inches='tight')
 n_samples=5000
 z_sample = torch.randn((n_samples, args.vae_latent)).to(device)
 z, logdet = generator.reverse(z_sample)
-z = tanhf * 2 * torch.sigmoid(z) - tanhf
 pcs = vae.decode(z)#.detach().cpu().numpy()    
 z = z.detach().cpu().numpy()     
 
-nplot = 16
+nplot = 8
 import corner
 plt.rc('xtick',labelsize=20)
 plt.rc('ytick',labelsize=20)
@@ -308,10 +268,14 @@ plt.rc('font', **font)
 lbl = []
 for i in range(nplot):
     lbl.append(r'$z_{'+str(i)+'}$')
-fig = corner.corner(z[:,:nplot], labels=lbl, hist_bin_factor=2, smooth=True, truths=ztot[microindx,:nplot].detach().cpu().numpy())
+fig = corner.corner(z[:,:nplot],
+                    labels=lbl,
+                    hist_bin_factor=2,
+                    smooth=False,
+                    truths=ztot[microindx,:nplot])
 plt.savefig('./images/inference/corner_z_' + str(microindx) + '_' + str(args.logprior_weight) + '_' + str(args.n_flow) + '.png', bbox_inches='tight') 
 
-nplot = 16
+nplot = 8
 plt.rc('xtick',labelsize=20)
 plt.rc('ytick',labelsize=20)
 font = {'family' : 'serif','weight' : 'normal','size'   : 30}
@@ -319,23 +283,41 @@ plt.rc('font', **font)
 lbl = []
 for i in range(nplot):
     lbl.append(r'$\alpha_{'+str(i)+'}$')
-fig = corner.corner(pcs[:,:nplot].detach().cpu().numpy(), labels=lbl, hist_bin_factor=2, smooth=True, truths=pcstot[microindx,:nplot])
+fig = corner.corner(pcs[:,:nplot].detach().cpu().numpy(),
+                    labels=lbl,
+                    hist_bin_factor=2,
+                    smooth=False,
+                    color = "tab:blue",
+                    truths=pcstot[microindx,:nplot],
+                    truth_color='tab:red')
+corner.overplot_points(fig, pcstot[:,:nplot], color="black", alpha=0.02, markersize = 3)
+
+# Extract the axes
+axes = np.array(fig.axes).reshape((nplot, nplot))
+
+# Loop over the diagonal
+for i in range(nplot):
+    ax = axes[i, i]
+    ax.set_xlim([pcstot[:,i].min(),pcstot[:,i].max()])
+
+# Loop over the histograms
+for yi in range(nplot):
+    for xi in range(yi):
+        ax = axes[yi, xi]
+        ax.set_xlim([pcstot[:,xi].min(),pcstot[:,xi].max()])
+        ax.set_ylim([pcstot[:,yi].min(),pcstot[:,yi].max()])
+
 plt.savefig('./images/inference/corner_pcs_' + str(microindx) + '_' + str(args.logprior_weight) + '_' + str(args.n_flow) + '.png', bbox_inches='tight') 
 
 # Plot passes through forward model alongside conditioning experimental results
-model.eval()
-likelihood.eval()
-
-print('PC GP min: ' + str(pcstot_min))
-print('PC GP max: ' + str(pcstot_max))
-
 Ymodel = torch.zeros((5000,3))
 Kmodel = torch.zeros((5000,3))
 for j in range(5000):
     pcsvec = pcs[j,:args.pcs_gp][None,...]
     pcsvec = 2 * (pcsvec - pcstot_min)/(pcstot_max - pcstot_min) - 1
     Ymodel[j,:], Kmodel[j,:] = predictK(pcsvec,device)
-    print(j)
+    if (j + 1) % 100 == 0:
+        print(j + 1)
 
 Ymodel = Ymodel.detach().cpu().numpy()
 Kmodel = Kmodel.detach().cpu().numpy()
@@ -400,35 +382,12 @@ for i in range(3):
 axes[0].legend()
 plt.savefig('./images/inference/generated_resubmitted_' + str(microindx) + '_' + str(args.logprior_weight) + '_' + str(args.n_flow) + '.png', bbox_inches='tight')
 
-ztot = ztot.detach().cpu().numpy()
-
-plt.rc('xtick',labelsize=20)
-plt.rc('ytick',labelsize=20)
-font = {'family' : 'serif','weight' : 'normal','size'   : 20}
-plt.rc('font', **font)
-fig, axes = plt.subplots(4,4, figsize=(30, 30), sharex=False)
-c = 0
-for i in range(4):
-    for j in range(4):
-        if c < 15:
-            ax = axes[i,j]
-            ax.scatter(ztot[:,c],ztot[:,c+1],s=10,color='black',label=r'$p(z)$')
-            ax.scatter(z[:,c],z[:,c+1],s=30,color='tab:blue',alpha=0.1,label=r'$p(z|k)$')
-            ax.set_xlabel(r'$\alpha_{'+str(int(c))+'}$')
-            ax.set_ylabel(r'$\alpha_{'+str(int(c+1))+'}$') 
-            ax.scatter(ztot[microindx,c],ztot[microindx,c+1],s=200,
-                   facecolor=clr_dict[microindx],edgecolor='black',label=microindx+1)
-        c += 1
-axes[0,0].legend()
-plt.savefig('./images/inference/z_clouds_' + str(microindx) + '_' + str(args.logprior_weight) + '_' + str(args.n_flow) + '.png', bbox_inches='tight') 
-
 ###############################################################################
 # Reconstruct spatial correlations
 ###############################################################################
 n_samples=1000
 z_sample = torch.randn((n_samples, args.vae_latent)).to(device)
 z, logdet = generator.reverse(z_sample)
-z = tanhf * 2 * torch.sigmoid(z) - tanhf
 pcs = vae.decode(z).detach().cpu().numpy()    
 z = z.detach().cpu().numpy()   
 
