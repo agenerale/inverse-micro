@@ -1,6 +1,6 @@
 # Stochastic Inverse Microstructure Design
 This repository contains research code associated with a forthcoming article entitled
-**"Stochastic Inverse Microstructure Design"**. The proposed framework enables identifying
+* *"Stochastic Inverse Microstructure Design"* *. The proposed framework enables identifying
 a conditional density over 2-point spatial correlations given a set of target thermal
 conductivities.
 
@@ -11,17 +11,17 @@ to as well at: agenerale3@gatech.edu(agenerale3@gatech.edu).
 # Contents
 This section provides a brief description of the contents of this repository.
 
-1. **Models**: Contains code for instantiating the Gaussian mixture model (GMM), sparse variational multi-output
+1. * *Models* *: Contains code for instantiating the Gaussian mixture model (GMM), sparse variational multi-output
  Gaussian process (SV-MOGP), flow-based generative model, and variational auto-encoder (VAE) used in this work.
  
-2. **inputs.h5**: Contains PC scores (computed from 2-point spatial correlations) of initial microstructure
+2. * *inputs.h5* *: Contains PC scores (computed from 2-point spatial correlations) of initial microstructure
  dataset, alongside corresponding location in the latent space of the VAE and property set.
  
-3. **mogp_likelihood_state.pth, mogp_model_state.pth**: Model state dictionaries for the SV-MOGP forward model.
+3. * *mogp_likelihood_state.pth, mogp_model_state.pth* *: Model state dictionaries for the SV-MOGP forward model.
 
-4. **normflow_k_vae_{micro}_1.0_48.pth**: Model state dictionaries for final solutions of conditional distributions
+4. * *normflow_k_vae_{micro}_1.0_48.pth* *: Model state dictionaries for final solutions of conditional distributions
  of microstructure PC scores given target orthotropic thermal conductivity.
 
-5. **vae_1024d_64_beta100.pth**: Model state dictionary for the trained VAE.
+5. * *vae_1024d_64_beta100.pth* *: Model state dictionary for the trained VAE.
 
  
