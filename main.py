@@ -19,8 +19,8 @@ from models.realnvp import RealNVP
 from models.vae import betaVAE
 
 parser = argparse.ArgumentParser(description="Deep Probabilistic Inverse Microstructure UQ")
-parser.add_argument("--train", action='store_true', help="train (True) cuda")
-parser.add_argument("--load", action='store_false', help="load pretrained model")
+parser.add_argument("--train", action='store_false', help="train (True) cuda")
+parser.add_argument("--load", action='store_true', help="load pretrained model")
 parser.add_argument("--train_gmm", action='store_true', help="train GMM prior (True)")
 parser.add_argument("--use_gmm", action='store_true', help="use GMM prior (True) or N(0,1) (False)")
 parser.add_argument("--micro", default=0, type=int, help="[0, 1, 2, 3]")
@@ -29,7 +29,7 @@ parser.add_argument("--n_epoch", default=40000, type=int, help="number of epochs
 parser.add_argument("--lr_init", default=1e-3, type=float, help="init. learning rate")
 parser.add_argument("--lr_end", default=1e-10, type=float, help="end learning rate")
 parser.add_argument("--clip", default=1e-5, type=float, help="gradient clip for neural network training")
-parser.add_argument("--n_samples", default=256, type=int, help="minibatch size")
+parser.add_argument("--n_samples", default=1024, type=int, help="minibatch size")
 parser.add_argument("--vae_latent", default=64, type=int, help="VAE latend dimension")
 parser.add_argument("--vae_input", default=1024, type=int, help="# PCs input to VAE")
 parser.add_argument("--pcs_gp", default=16, type=int, help="# PCs for GP reduced-order model")

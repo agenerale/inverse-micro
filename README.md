@@ -8,7 +8,7 @@ If you find this code useful, interesting, and are open to collaboration, please
 Alternatively, if you have any questions regarding the contents of this repository, feel free
 to as well at: [agenerale3@gatech.edu](agenerale3@gatech.edu).
 
-# Contents
+## Contents
 This section provides a brief description of the contents of this repository.
 
 1. *Models*: Contains code for instantiating the Gaussian mixture model (GMM), sparse variational multi-output
@@ -24,9 +24,11 @@ This section provides a brief description of the contents of this repository.
 
 5. *vae_1024d_64_beta100.pth*: Model state dictionary for the trained VAE.
 
-# Execute
+6. *main.py*: Main executable for training and post-processing results from the flow-based generative model.
 
-```python
-s = "Python syntax highlighting"
-print s
+## Execute
+Inference of the conditional microstructure distributions provided above can be replicated as
 ```
+python main.py --micro 0
+```
+where the *micro* flag can be swept from 0-2 for the three current test cases.
