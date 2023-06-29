@@ -87,41 +87,13 @@ class AffineCoupling(nn.Module):
         self.affine = affine
         self.batch_norm = batch_norm
 
-        # self.net = nn.Sequential(
-        #   nn.Linear(ndim-ndim//2, ndim // (2*seqfrac)),
-        #   nn.LeakyReLU(negative_slope=0.01, inplace=True),
-        #   nn.BatchNorm1d(ndim // (2*seqfrac)),
-        #   nn.Linear(ndim // (2*seqfrac), ndim // (2*seqfrac)),
-        #   nn.LeakyReLU(negative_slope=0.01, inplace=True),
-        #   nn.BatchNorm1d(ndim // (2*seqfrac)),
-        #   ZeroFC(ndim // (2*seqfrac), 2*(ndim // 2) if self.affine else ndim // 2),
-        # )
-
-        # self.net = nn.Sequential(
-        #     nn.Linear(ndim-ndim//2, int(ndim / (2*seqfrac))),
-        #     nn.LeakyReLU(negative_slope=0.01, inplace=True),
-        #     nn.LayerNorm(int(ndim / (2*seqfrac))),
-        #     nn.Linear(int(ndim / (2*seqfrac)), int(ndim / (2*seqfrac))),
-        #     nn.LeakyReLU(negative_slope=0.01, inplace=True),
-        #     nn.LayerNorm(int(ndim / (2*seqfrac))),
-        #     ZeroFC(int(ndim / (2*seqfrac)), 2*(ndim // 2) if self.affine else ndim // 2),
-        # )
         if batch_norm:
-            # older version has skip connection, but we find that not necessary
             self.net = nn.Sequential(
                 nn.Linear(ndim-ndim//2, int(ndim / (2*seqfrac))),
                 nn.LeakyReLU(negative_slope=0.01, inplace=True),
-                # nn.Softplus(beta=1, threshold=20),
-                # nn.Tanh(),
-                # nn.ReLU(),
-                # nn.GELU(),
                 nn.BatchNorm1d(int(ndim / (2*seqfrac)), eps=1e-2, affine=True),
                 nn.Linear(int(ndim / (2*seqfrac)), int(ndim / (2*seqfrac))),
                 nn.LeakyReLU(negative_slope=0.01, inplace=True),
-                # nn.Softplus(beta=1, threshold=20),
-                # nn.Tanh(),
-                # nn.ReLU(),
-                # nn.GELU(),
                 nn.BatchNorm1d(int(ndim / (2*seqfrac)), eps=1e-2, affine=True),
                 ZeroFC(int(ndim / (2*seqfrac)), 2*(ndim // 2) if self.affine else ndim // 2),
             )
@@ -131,29 +103,18 @@ class AffineCoupling(nn.Module):
 
             self.net[3].weight.data.normal_(0, 0.05)
             self.net[3].bias.data.zero_()
-            # self.net[2].weight.data.normal_(0, 0.05)
-            # self.net[2].bias.data.zero_()
         else:
-            # older version has skip connection, but we find that not necessary
             self.net = nn.Sequential(
                 nn.Linear(ndim-ndim//2, int(ndim / (2*seqfrac))),
                 nn.LeakyReLU(negative_slope=0.01, inplace=True),
-                # nn.Softplus(beta=1, threshold=20),
-                # nn.Tanh(),
-                # nn.BatchNorm1d(int(ndim / (2*seqfrac)), eps=1e-2, affine=True),
                 nn.Linear(int(ndim / (2*seqfrac)), int(ndim / (2*seqfrac))),
                 nn.LeakyReLU(negative_slope=0.01, inplace=True),
-                # nn.Softplus(beta=1, threshold=20),
-                # nn.Tanh(),
-                # nn.BatchNorm1d(int(ndim / (2*seqfrac)), eps=1e-2, affine=True),
                 ZeroFC(int(ndim / (2*seqfrac)), 2*(ndim // 2) if self.affine else ndim // 2),
             )
 
             self.net[0].weight.data.normal_(0, 0.05)
             self.net[0].bias.data.zero_()
 
-            # self.net[3].weight.data.normal_(0, 0.05)
-            # self.net[3].bias.data.zero_()
             self.net[2].weight.data.normal_(0, 0.05)
             self.net[2].bias.data.zero_()
 
