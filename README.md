@@ -1,6 +1,6 @@
-# Stochastic Inverse Microstructure Design
+# Inverse Stochastic Microstructure Design
 This repository contains research code associated with a forthcoming article entitled
-*"Stochastic Inverse Microstructure Design"*. The proposed framework enables identifying
+*"Inverse Stochastic Microstructure Design"*. The proposed framework enables identifying
 a conditional density over 2-point spatial correlations given a set of target thermal
 conductivities.
 
