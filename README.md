@@ -30,10 +30,17 @@ A. Generale, A. Robertson, C. Kelly, S. Kalidindi. Inverse Stochastic Microstruc
 </details>
 
 ## Examples
+The framework is briefly displayed below. A statistical representation of microstructure, namely, 2-point spatial correlations are first subjected to a orthogonal transformation through Principal Component Analysis (PCA), and subsequently through a nonlinear embedding with a Variational Autoencoder (VAE) for the construction of an information dense hierarchical latent space. This latent space enables the probabilistic inversion of the structure-property linkage.
 
-![My Image](images/inference/corner_pcs_16_1.0_48.png)
+![My Image](images/framework_pictoral.png)
 
-![My Image](images/inference/generated_resubmitted_16_1.0_48.png)
+In the PC latent space, the framework is capable of identifying statistical microstructure representations giving rise to target property sets under uncertainty of the forward model. The unseen microstructure representation (red) corresponding to the target set of orthotropic thermal conductivities is recovered by the posterior (blue), with high specificity relative to the complete ensemble (black).
+
+![My Image](images/corner_pcs_double4_16_1.0_48.png)
+
+The posterior similarly, recovers the unseen microstructure representation (red) in 2-point spatial correlation space (visualized in 1D, rather than the complex set in 3D).
+
+![My Image](images/generated_xy_line_2x2_16_paper.png)
 
 ## Contents
 This section provides a brief description of the contents of this repository.
