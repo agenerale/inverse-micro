@@ -1,4 +1,9 @@
-# Stochastic Inverse Microstructure Design
+# Inverse Stochastic Microstructure Design
+
+[![Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4590691)
+
+## Description
+
 This repository contains research code associated with a forthcoming article entitled
 *"Stochastic Inverse Microstructure Design"*. The proposed framework enables identifying
 a conditional density over 2-point spatial correlations given a set of target thermal
@@ -19,12 +24,9 @@ This section provides a brief description of the contents of this repository.
  
 3. *mogp_likelihood_state.pth, mogp_model_state.pth*: Model state dictionaries for the SV-MOGP forward model.
 
-4. *normflow_k_vae_{micro}_1.0_48.pth*: Model state dictionaries for final solutions of conditional distributions
- of microstructure PC scores given target orthotropic thermal conductivity.
+4. *vae.pth*: Model state dictionary for the trained VAE.
 
-5. *vae_1024d_64_beta100.pth*: Model state dictionary for the trained VAE.
-
-6. *main.py*: Main executable for training and post-processing results from the flow-based generative model.
+5. *main.py*: Main executable for training and post-processing results from the flow-based generative model.
 
 ## Execute
 Inference of the conditional microstructure distributions provided above can be replicated as

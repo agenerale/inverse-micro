@@ -97,7 +97,7 @@ likelihood.load_state_dict(state_dict_likelihood)
 
 # Load in VAE
 vae = betaVAE(args.vae_input, args.vae_latent).to(device)
-state_dict = torch.load('vae_'+str(args.vae_input)+'d_'+str(args.vae_latent)+'_beta' + str(args.beta)+'.pth', map_location=device)
+state_dict = torch.load('vae.pth', map_location=device)
 vae.load_state_dict(state_dict)
 vae.eval()
 
