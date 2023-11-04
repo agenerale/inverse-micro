@@ -29,6 +29,12 @@ A. Generale, A. Robertson, C. Kelly, S. Kalidindi. Inverse Stochastic Microstruc
 ```
 </details>
 
+## Examples
+
+![My Image](images/inference/corner_pcs_16_1.0_48.png)
+
+![My Image](images/inference/generated_resubmitted_16_1.0_48.png)
+
 ## Contents
 This section provides a brief description of the contents of this repository.
 
