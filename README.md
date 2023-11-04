@@ -1,6 +1,6 @@
 # Inverse Stochastic Microstructure Design
 
-[![Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4590691)
+[Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4590691)
 
 ## Description
 
@@ -34,13 +34,12 @@ The framework is briefly displayed below. A statistical representation of micros
 
 ![My Image](images/framework_pictoral.png)
 
-In the PC latent space, the framework is capable of identifying statistical microstructure representations giving rise to target property sets under uncertainty of the forward model. The unseen microstructure representation (red) corresponding to the target set of orthotropic thermal conductivities is recovered by the posterior (blue), with high specificity relative to the complete ensemble (black).
+In the PC latent space (left), the framework is capable of identifying statistical microstructure representations giving rise to target property sets under uncertainty of the forward model. The unseen microstructure representation (red) corresponding to the target set of orthotropic thermal conductivities is recovered by the posterior (blue), with high specificity relative to the complete ensemble (black).
 
-![My Image](images/corner_pcs_double4_16_1.0_48.png)
+The posterior similarly, recovers the unseen microstructure representation (red) in 2-point spatial correlation space (right), shown in 1D, rather than the complete set in 3D for visual clarity.
 
-The posterior similarly, recovers the unseen microstructure representation (red) in 2-point spatial correlation space (visualized in 1D, rather than the complex set in 3D).
+![My Image](images/github_img.png)
 
-![My Image](images/generated_xy_line_2x2_16_paper.png)
 
 ## Contents
 This section provides a brief description of the contents of this repository.
