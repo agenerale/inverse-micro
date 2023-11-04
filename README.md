@@ -27,6 +27,7 @@ A. Generale, A. Robertson, C. Kelly, S. Kalidindi. Inverse Stochastic Microstruc
 	author = {Generale, Adam and Robertson, Andreas E. and Kelly, Conlain and Kalidindi, Surya R.},
 	year = {2023}
 ```
+</details>
 
 ## Contents
 This section provides a brief description of the contents of this repository.
