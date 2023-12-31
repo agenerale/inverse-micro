@@ -63,3 +63,5 @@ Inference of the conditional microstructure distributions provided above can be 
 python main.py --micro 0
 ```
 where the *micro* flag can be swept from 0-2 for the three current test cases.
+
+For postprocessing of results from the trained model, plotting results over the space of 2-point spatial correlations requires *pca_autocorr_1024.pkl*. Due to its prohibitive size, it has been left out from these associated files. If needed for your own use case, please feel free to reach out.

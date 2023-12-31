@@ -200,7 +200,7 @@ pcstot_hull = pcaposterior(args, predictK, vae, generator,
                  output, pcstot, ztot, microindx,
                  microindx_array, device)
 
-twopsposterior(args, vae, generator,
-                 output, pcstot, ztot, microindx,
-                 microindx_array, pcstot_hull, device)
+#twopsposterior(args, vae, generator,
+#                 output, pcstot, ztot, microindx,
+#                 microindx_array, pcstot_hull, device)
     
