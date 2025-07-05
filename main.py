@@ -47,7 +47,7 @@ microindx = microindx_array[args.micro]
 
 ###############################################################################
 # load target thermal conductivity and latent space of VAE
-with h5py.File("inputs.h5", "r") as f:
+with h5py.File("./data/inputs.h5", "r") as f:
     print("Keys: %s" % f.keys())
     pcstot = f['pcs'][()]
     output = f['k'][()]
@@ -91,14 +91,14 @@ lik_params = sum(p.numel() for p in likelihood.parameters() if p.requires_grad)
 model_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 params_gp = lik_params + model_params
 
-state_dict_model = torch.load('mogp_model_state.pth', map_location=device)
-state_dict_likelihood = torch.load('mogp_likelihood_state.pth', map_location=device)
+state_dict_model = torch.load('./checkpoints/mogp_model_state.pth', map_location=device)
+state_dict_likelihood = torch.load('./checkpoints/mogp_likelihood_state.pth', map_location=device)
 model.load_state_dict(state_dict_model)
 likelihood.load_state_dict(state_dict_likelihood)
 
 # Load in VAE
 vae = betaVAE(args.vae_input, args.vae_latent).to(device)
-state_dict = torch.load('vae.pth', map_location=device)
+state_dict = torch.load('./checkpoints/vae.pth', map_location=device)
 vae.load_state_dict(state_dict)
 vae.eval()
 

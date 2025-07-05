@@ -1,6 +1,6 @@
 # Inverse Stochastic Microstructure Design
 
-[Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4590691)
+[Paper](https://www.sciencedirect.com/science/article/abs/pii/S1359645424002301)
 
 ## Description
 
@@ -15,17 +15,21 @@ to as well at: [agenerale3@gatech.edu](agenerale3@gatech.edu). Please consider c
 
 <details>
 <summary>
-A. Generale, A. Robertson, C. Kelly, S. Kalidindi. Inverse Stochastic Microstructure Design, 2023.
+Generale, A. P., Robertson, A. E., Kelly, C., & Kalidindi, S. R. (2024). Inverse stochastic microstructure design. Acta Materialia, 271, 119877. https://doi.org/10.1016/j.actamat.2024.119877
 </summary>
 
 ```bibtex
-@article{generale_inverse_2023,
-	address = {Rochester, NY},
-	type = {{SSRN} {Scholarly} {Paper}},
-	title = {Inverse {Stochastic} {Microstructure} {Design}},
-	doi = {10.2139/ssrn.4590691},
-	author = {Generale, Adam and Robertson, Andreas E. and Kelly, Conlain and Kalidindi, Surya R.},
-	year = {2023}
+@article{generale_inverse_2024,
+	title = {Inverse stochastic microstructure design},
+	journal = {Acta Materialia},
+	volume = {271},
+	pages = {119877},
+	year = {2024},
+	issn = {1359-6454},
+	doi = {https://doi.org/10.1016/j.actamat.2024.119877},
+	url = {https://www.sciencedirect.com/science/article/pii/S1359645424002301},
+	author = {Adam P. Generale and Andreas E. Robertson and Conlain Kelly and Surya R. Kalidindi},
+	keywords = {Inverse design, Generative modeling, Uncertainty quantification, Bayesian inference, Computational materials design, Microstructure},
 	}
 ```
 </details>
@@ -48,14 +52,12 @@ This section provides a brief description of the contents of this repository.
 1. *Models*: Contains code for instantiating the Gaussian mixture model (GMM), sparse variational multi-output
  Gaussian process (SV-MOGP), flow-based generative model, and variational auto-encoder (VAE) used in this work.
  
-2. *inputs.h5*: Contains PC scores (computed from 2-point spatial correlations) of initial microstructure
+2. *Data*: Contains PC scores (computed from 2-point spatial correlations) of initial microstructure
  dataset, alongside corresponding location in the latent space of the VAE and property set.
  
-3. *mogp_likelihood_state.pth, mogp_model_state.pth*: Model state dictionaries for the SV-MOGP forward model.
+3. *Checkpoints*: *mogp_likelihood_state.pth, mogp_model_state.pth, vae.pth* Model state dictionaries for the SV-MOGP forward model and VAE.
 
-4. *vae.pth*: Model state dictionary for the trained VAE.
-
-5. *main.py*: Main executable for training and post-processing results from the flow-based generative model.
+4. *main.py*: Main executable for training and post-processing results from the flow-based generative model.
 
 ## Execute
 Inference of the conditional microstructure distributions provided above can be replicated as
